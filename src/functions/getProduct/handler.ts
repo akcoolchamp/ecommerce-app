@@ -1,23 +1,22 @@
-import { ValidatedEventAPIGatewayProxyEvent } from "@libs/api-gateway";
+import {
+    SuccessResponse,
+    ValidatedEventAPIGatewayProxyEvent,
+} from "@libs/api-gateway";
 import { middyfy } from "@libs/lambda";
 import schema, { validateRequest } from "./schema";
 import { ProductService } from "@services/productService";
-import { randomUUID } from "crypto";
 
 const handler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
     event
 ) => {
     try {
-        const body = await validateRequest(event.body);
-        const ProductId = randomUUID();
-        const params = {
-            ...body,
-            ProductId,
-        };
-        console.log(params);
+        const { productId: ProductId } = await validateRequest(
+            event.pathParameters
+        );
+
         const productServiceObject = new ProductService();
-        const response = await productServiceObject.createProduct(params);
-        return response;
+        const response = await productServiceObject.getProduct(ProductId);
+        return new SuccessResponse({ message: "Product", data: response });
     } catch (error) {
         console.log(error);
         return error;

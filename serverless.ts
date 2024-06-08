@@ -2,6 +2,8 @@ const NODE_ENV = process.env.NODE_ENV || "dev";
 import type { AWS } from "@serverless/typescript";
 import createCategory from "@functions/createCategory";
 import createProduct from "@functions/createProduct";
+import getProduct from "@functions/getProduct";
+import editProduct from "@functions/editProduct";
 
 const serverlessConfiguration: AWS = {
     service: "ecommerce-application",
@@ -33,6 +35,8 @@ const serverlessConfiguration: AWS = {
     functions: {
         createCategory,
         createProduct,
+        getProduct,
+        editProduct,
     },
     package: { individually: true },
     custom: {

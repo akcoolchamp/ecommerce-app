@@ -10,12 +10,12 @@ import {
 } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 const client = new DynamoDBClient();
-const PRODUCTS_TABLE = process.env.PRODUCTS_TABLE;
+const PRODUCT_TABLE = process.env.PRODUCT_TABLE;
 
 export class ProductService {
     async createProduct(product) {
         const params: PutItemCommandInput = {
-            TableName: PRODUCTS_TABLE,
+            TableName: PRODUCT_TABLE,
             Item: marshall({
                 ProductId: product.ProductId,
                 Name: product.Name,
@@ -32,13 +32,14 @@ export class ProductService {
             await client.send(new PutItemCommand(params));
             return unmarshall(params.Item);
         } catch (error) {
+            console.log(error);
             throw new Error("Could not create product");
         }
     }
 
     async getProduct(productId) {
         const params = {
-            TableName: PRODUCTS_TABLE,
+            TableName: PRODUCT_TABLE,
             Key: marshall({
                 ProductId: productId,
             }),
@@ -54,7 +55,7 @@ export class ProductService {
 
     async updateProduct(productId, product) {
         const params: UpdateItemCommandInput = {
-            TableName: PRODUCTS_TABLE,
+            TableName: PRODUCT_TABLE,
             Key: marshall({
                 ProductId: productId,
             }),
@@ -91,7 +92,7 @@ export class ProductService {
 
     async deleteProduct(productId) {
         const params = {
-            TableName: PRODUCTS_TABLE,
+            TableName: PRODUCT_TABLE,
             Key: marshall({
                 ProductId: productId,
             }),
