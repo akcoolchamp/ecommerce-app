@@ -1,0 +1,6 @@
+{
+    "watch": ["src"],
+    "ext": "js, ts, json",
+    "ignore": ["src/**/*.spec.ts"],
+    "exec": "serverless offline --region ap-south-1 --noAuth --noTimeout --noPrependStageInUrl --host 0.0.0.0"
+}
