@@ -4,6 +4,7 @@ import createCategory from "@functions/createCategory";
 import createProduct from "@functions/createProduct";
 import getProduct from "@functions/getProduct";
 import editProduct from "@functions/editProduct";
+import deleteProduct from "@functions/deleteProduct";
 
 const serverlessConfiguration: AWS = {
     service: "ecommerce-application",
@@ -37,6 +38,7 @@ const serverlessConfiguration: AWS = {
         createProduct,
         getProduct,
         editProduct,
+        deleteProduct,
     },
     package: { individually: true },
     custom: {
