@@ -1,7 +1,7 @@
 const NODE_ENV = process.env.NODE_ENV || "dev";
-
-import createCategory from "@functions/createCategory";
 import type { AWS } from "@serverless/typescript";
+import createCategory from "@functions/createCategory";
+import createProduct from "@functions/createProduct";
 
 const serverlessConfiguration: AWS = {
     service: "ecommerce-application",
@@ -10,6 +10,7 @@ const serverlessConfiguration: AWS = {
         "serverless-esbuild",
         "serverless-offline",
         "serverless-dotenv-plugin",
+        // "serverless-appsync-plugin",
     ],
     provider: {
         name: "aws",
@@ -31,6 +32,7 @@ const serverlessConfiguration: AWS = {
     // import the function via paths
     functions: {
         createCategory,
+        createProduct,
     },
     package: { individually: true },
     custom: {
@@ -47,6 +49,20 @@ const serverlessConfiguration: AWS = {
         dotenv: {
             path: `./config/.env.${NODE_ENV}`,
         },
+        // appSync: {
+        //     name: "EcommerceAppSync",
+        //     schema: "schema.api.graphql",
+        //     dataSources: [
+        //         {
+        //             type: "AWS_LAMBDA",
+        //             name: "createCategory",
+        //             description: "Lambda",
+        //             config: {
+        //                 functionName: "createCategory",
+        //             },
+        //         },
+        //     ],
+        // },
     },
 };
 
