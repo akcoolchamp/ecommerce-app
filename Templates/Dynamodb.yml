@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  ProductsTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: 'Products'
+      AttributeDefinitions:
+        - AttributeName: 'ProductId'
+          AttributeType: 'S'
+        - AttributeName: 'Name'
+          AttributeType: 'S'
+        - AttributeName: 'Description'
+          AttributeType: 'S'
+        - AttributeName: 'Price'
+          AttributeType: 'N'
+        - AttributeName: 'Category'
+          AttributeType: 'S'
+        - AttributeName: 'Stock'
+          AttributeType: 'N'
+        - AttributeName: 'CreatedAt'
+          AttributeType: 'S'
+        - AttributeName: 'UpdatedAt'
+          AttributeType: 'S'
+      KeySchema:
+        - AttributeName: 'ProductId'
+          KeyType: 'HASH'
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  ProductTaxonomyAttributesTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: 'ProductTaxonomyAttributes'
+      AttributeDefinitions:
+        - AttributeName: 'TaxonomyId'
+          AttributeType: 'S'
+        - AttributeName: 'ParentId'
+          AttributeType: 'S'
+        - AttributeName: 'Name'
+          AttributeType: 'S'
+        - AttributeName: 'Description'
+          AttributeType: 'S'
+        - AttributeName: 'Type'
+          AttributeType: 'S'
+      KeySchema:
+        - AttributeName: 'TaxonomyId'
+          KeyType: 'HASH'
+      GlobalSecondaryIndexes:
+        - IndexName: 'ParentIndex'
+          KeySchema:
+            - AttributeName: 'ParentId'
+              KeyType: 'HASH'
+            - AttributeName: 'Name'
+              KeyType: 'RANGE'
+          Projection:
+            ProjectionType: 'ALL'
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5

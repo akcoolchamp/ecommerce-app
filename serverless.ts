@@ -1,6 +1,5 @@
 const NODE_ENV = process.env.NODE_ENV || "dev";
 import type { AWS } from "@serverless/typescript";
-import createCategory from "@functions/createCategory";
 import createProduct from "@functions/createProduct";
 import getProduct from "@functions/getProduct";
 import editProduct from "@functions/editProduct";
@@ -13,7 +12,7 @@ const serverlessConfiguration: AWS = {
         "serverless-esbuild",
         "serverless-offline",
         "serverless-dotenv-plugin",
-        // "serverless-appsync-plugin",
+        "serverless-appsync-plugin",
     ],
     provider: {
         name: "aws",
@@ -31,10 +30,21 @@ const serverlessConfiguration: AWS = {
         deploymentBucket: process.env.DEPLOYMENT_BUCKET,
         deploymentMethod: "direct",
         versionFunctions: false,
+        iamRoleStatements: [
+            {
+                Effect: "Allow",
+                Action: [
+                    "dynamodb:PutItem",
+                    "dynamodb:GetItem",
+                    "dynamodb:UpdateItem",
+                    "dynamodb:DeleteItem",
+                ],
+                Resource: "*",
+            },
+        ],
     },
     // import the function via paths
     functions: {
-        createCategory,
         createProduct,
         getProduct,
         editProduct,
@@ -55,20 +65,46 @@ const serverlessConfiguration: AWS = {
         dotenv: {
             path: `./config/.env.${NODE_ENV}`,
         },
-        // appSync: {
-        //     name: "EcommerceAppSync",
-        //     schema: "schema.api.graphql",
-        //     dataSources: [
-        //         {
-        //             type: "AWS_LAMBDA",
-        //             name: "createCategory",
-        //             description: "Lambda",
-        //             config: {
-        //                 functionName: "createCategory",
-        //             },
-        //         },
-        //     ],
-        // },
+        appSync: {
+            name: "EcommerceAppSync",
+            authenticationType: "API_KEY",
+            apiKeys: ["EcommerceKey"],
+            schema: ["./schema.graphql"],
+            dataSources: [
+                {
+                    type: "AWS_LAMBDA",
+                    name: "createProduct",
+                    description: "Lambda",
+                    config: {
+                        functionName: "createProduct",
+                    },
+                },
+                {
+                    type: "AWS_LAMBDA",
+                    name: "editProduct",
+                    description: "Lambda",
+                    config: {
+                        functionName: "editProduct",
+                    },
+                },
+                {
+                    type: "AWS_LAMBDA",
+                    name: "getProduct",
+                    description: "Lambda",
+                    config: {
+                        functionName: "getProduct",
+                    },
+                },
+                {
+                    type: "AWS_LAMBDA",
+                    name: "deleteProduct",
+                    description: "Lambda",
+                    config: {
+                        functionName: "deleteProduct",
+                    },
+                },
+            ],
+        },
     },
 };
 
