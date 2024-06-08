@@ -1,4 +1,7 @@
-import { ValidatedEventAPIGatewayProxyEvent } from "@libs/api-gateway";
+import {
+    SuccessResponse,
+    ValidatedEventAPIGatewayProxyEvent,
+} from "@libs/api-gateway";
 import { middyfy } from "@libs/lambda";
 import schema, { validateRequest } from "./schema";
 import { ProductService } from "@services/productService";
@@ -16,8 +19,8 @@ const handler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
         };
         console.log(params);
         const productServiceObject = new ProductService();
-        const response = await productServiceObject.createProduct(params);
-        return response;
+        await productServiceObject.createProduct(params);
+        return new SuccessResponse({ message: "Product created" });
     } catch (error) {
         console.log(error);
         return error;

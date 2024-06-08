@@ -33409,6 +33409,32 @@ __export(handler_exports, {
 });
 module.exports = __toCommonJS(handler_exports);
 
+// src/libs/api-gateway.ts
+var GeneralApiResponse = class {
+  constructor(response) {
+    this.headers = {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "*",
+      "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,IdToken,,X-Api-Key,X-Amz-Security-Token",
+      "Access-Control-Allow-Credentials": true
+    };
+    this.body = JSON.stringify(response);
+  }
+};
+var SuccessResponse = class extends GeneralApiResponse {
+  constructor() {
+    super(...arguments);
+    this.statusCode = 200;
+  }
+};
+var BadRequestResponse = class extends GeneralApiResponse {
+  constructor() {
+    super(...arguments);
+    this.statusCode = 400;
+  }
+};
+
 // node_modules/@middy/core/index.js
 var import_events = require("events");
 var defaultLambdaHandler = () => {
@@ -33779,26 +33805,6 @@ var middyfy = (handler2) => {
   return core_default(handler2).use(error_handler_default()).use(http_json_body_parser_default());
 };
 
-// src/libs/api-gateway.ts
-var GeneralApiResponse = class {
-  constructor(response) {
-    this.headers = {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "*",
-      "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,IdToken,,X-Api-Key,X-Amz-Security-Token",
-      "Access-Control-Allow-Credentials": true
-    };
-    this.body = JSON.stringify(response);
-  }
-};
-var BadRequestResponse = class extends GeneralApiResponse {
-  constructor() {
-    super(...arguments);
-    this.statusCode = 400;
-  }
-};
-
 // src/functions/createCategory/schema.ts
 var Joi = __toESM(require_lib4());
 
@@ -33883,7 +33889,7 @@ var handler = async (event) => {
     const response = await productTaxonomyServiceObject.createCategory(
       body
     );
-    return response;
+    return new SuccessResponse({ message: "Category created" });
   } catch (error) {
     console.log(error);
     return error;

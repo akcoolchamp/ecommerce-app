@@ -1,4 +1,7 @@
-import { ValidatedEventAPIGatewayProxyEvent } from "@libs/api-gateway";
+import {
+    SuccessResponse,
+    ValidatedEventAPIGatewayProxyEvent,
+} from "@libs/api-gateway";
 import { middyfy } from "@libs/lambda";
 import schema, { validateRequest } from "./schema";
 import { ProductTaxonomyService } from "@services/productTaxonomyAttributesService";
@@ -14,7 +17,7 @@ const handler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
             body
         );
 
-        return response;
+        return new SuccessResponse({ message: "Category created" });
     } catch (error) {
         console.log(error);
         return error;
