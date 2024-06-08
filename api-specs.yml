@@ -1,0 +1,174 @@
+openapi: 3.0.0
+info:
+  title: eCommerce API
+  description: API for managing product categories and products
+  version: 1.0.0
+
+servers:
+  - url: https://api.example.com/v1
+
+paths:
+  /categories:
+    post:
+      summary: Create a new product category
+      requestBody:
+        description: Product category object to be created
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCategory'
+      responses:
+        '201':
+          description: Category created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCategory'
+        '400':
+          description: Invalid input
+
+  /products:
+    post:
+      summary: Create a new product
+      requestBody:
+        description: Product object to be created
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '201':
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Invalid input
+        '404':
+          description: Category not found
+
+  /products/{productId}:
+    get:
+      summary: Retrieve a product
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Product retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Product not found
+
+    put:
+      summary: Update a product
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Product object with updated information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Product updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Invalid input
+        '404':
+          description: Product not found
+
+    delete:
+      summary: Delete a product
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Product deleted successfully
+        '404':
+          description: Product not found
+
+components:
+  schemas:
+    ProductCategory:
+      type: object
+      properties:
+        TaxonomyId:
+          type: string
+          description: Unique identifier for the category or tag
+        Name:
+          type: string
+          description: Name of the category or tag
+        Description:
+          type: string
+          description: Description of the category or tag
+        ParentId:
+          type: string
+          nullable: true
+          description: Identifier for the parent category (if any)
+        Type:
+          type: string
+          enum: [category, tag]
+          description: Type of the taxonomy (category or tag)
+      required:
+        - TaxonomyId
+        - Name
+        - Type
+
+    Product:
+      type: object
+      properties:
+        ProductId:
+          type: string
+          description: Unique identifier for the product
+        Name:
+          type: string
+          description: Name of the product
+        Description:
+          type: string
+          description: Description of the product
+        Price:
+          type: number
+          description: Price of the product
+        Category:
+          type: string
+          description: Category of the product
+        Stock:
+          type: integer
+          description: Inventory count
+        CreatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the product was created
+        UpdatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the product was last updated
+      required:
+        - ProductId
+        - Name
+        - Price
+        - Category
+        - Stock
