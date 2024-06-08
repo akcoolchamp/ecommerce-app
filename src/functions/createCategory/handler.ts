@@ -13,9 +13,7 @@ const handler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
         const body = await validateRequest(event.body);
 
         const productTaxonomyServiceObject = new ProductTaxonomyService();
-        const response = await productTaxonomyServiceObject.createCategory(
-            body
-        );
+        await productTaxonomyServiceObject.createCategory(body);
 
         return new SuccessResponse({ message: "Category created" });
     } catch (error) {
