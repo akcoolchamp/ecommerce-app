@@ -4,13 +4,14 @@ import {
     GetItemCommand,
 } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
+import { config } from "src/config";
 const client = new DynamoDBClient();
-const CATEGORIES_TABLE = process.env.CATEGORIES_TABLE;
+const PRODUCT_TAXONOMY_TABLE = config.PRODUCT_TAXONOMY_TABLE;
 
-class ProductTaxonomyService {
+export class ProductTaxonomyService {
     async createCategory(category) {
         const params = {
-            TableName: CATEGORIES_TABLE,
+            TableName: PRODUCT_TAXONOMY_TABLE,
             Item: marshall({
                 TaxonomyId: category.TaxonomyId,
                 Name: category.Name,
@@ -24,13 +25,14 @@ class ProductTaxonomyService {
             await client.send(new PutItemCommand(params));
             return unmarshall(params.Item);
         } catch (error) {
+            console.error(error);
             throw new Error("Could not create category");
         }
     }
 
     async getCategory(taxonomyId) {
         const params = {
-            TableName: CATEGORIES_TABLE,
+            TableName: PRODUCT_TAXONOMY_TABLE,
             Key: marshall({
                 TaxonomyId: taxonomyId,
             }),
@@ -44,5 +46,3 @@ class ProductTaxonomyService {
         }
     }
 }
-
-module.exports = ProductTaxonomyService;

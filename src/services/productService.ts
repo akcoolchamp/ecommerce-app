@@ -12,7 +12,7 @@ import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 const client = new DynamoDBClient();
 const PRODUCTS_TABLE = process.env.PRODUCTS_TABLE;
 
-class ProductService {
+export class ProductService {
     async createProduct(product) {
         const params: PutItemCommandInput = {
             TableName: PRODUCTS_TABLE,
@@ -105,5 +105,3 @@ class ProductService {
         }
     }
 }
-
-module.exports = ProductService;

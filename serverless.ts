@@ -1,5 +1,6 @@
 const NODE_ENV = process.env.NODE_ENV || "dev";
 
+import createCategory from "@functions/createCategory";
 import type { AWS } from "@serverless/typescript";
 
 const serverlessConfiguration: AWS = {
@@ -20,13 +21,17 @@ const serverlessConfiguration: AWS = {
         environment: {
             AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1",
             NODE_OPTIONS: "--enable-source-maps --stack-trace-limit=1000",
+            PRODUCT_TABLE: process.env.PRODUCT_TABLE,
+            PRODUCT_TAXONOMY_TABLE: process.env.PRODUCT_TAXONOMY_TABLE,
         },
         deploymentBucket: process.env.DEPLOYMENT_BUCKET,
         deploymentMethod: "direct",
         versionFunctions: false,
     },
     // import the function via paths
-    functions: {},
+    functions: {
+        createCategory,
+    },
     package: { individually: true },
     custom: {
         esbuild: {
